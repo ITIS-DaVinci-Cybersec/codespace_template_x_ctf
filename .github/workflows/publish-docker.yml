@@ -30,6 +30,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set lowercase owner
+        run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -38,8 +40,8 @@ jobs:
           file: .devcontainer/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/codevinci-codespace:latest
-            ghcr.io/${{ github.repository_owner }}/codevinci-codespace:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/codevinci-codespace:latest
+            ghcr.io/${{ env.OWNER_LC }}/codevinci-codespace:${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.description=CodeVinci GitHub Codespace Template
